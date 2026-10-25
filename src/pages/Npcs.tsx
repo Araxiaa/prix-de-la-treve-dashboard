@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { StatusModal } from '../components/actions'
+import { DeleteModal, NpcFormModal } from '../components/manage'
+import { useAuth } from '../lib/auth'
 import { Card, Empty, Loaded, Modal, PageHeader, Badge } from '../components/ui'
 import { api } from '../lib/api'
 import { CLANS, CLAN_EMOJI, ageInLunes, dateTime, norm } from '../lib/format'
@@ -14,6 +16,7 @@ export default function Npcs() {
   const [clan, setClan] = useState('')
   const [status, setStatus] = useState<'actif' | 'disparu' | 'mort' | 'tous'>('actif')
   const [openId, setOpenId] = useState<number | null>(null)
+  const [creating, setCreating] = useState(false)
   const rows = useMemo(() => {
     const needle = norm(q)
     return (state.data ?? []).filter((n) => {
@@ -24,7 +27,7 @@ export default function Npcs() {
   const open = state.data?.find((n) => n.id === openId) ?? null
   return (
     <>
-      <PageHeader title="PNJ" subtitle={`${rows.length} résultat(s)`} />
+      <PageHeader title="PNJ" subtitle={`${rows.length} résultat(s)`} actions={<button className="btn btn-primary" onClick={() => setCreating(true)}>➕ Nouveau PNJ</button>} />
       <Card>
         <div className="filters">
           <input className="search" placeholder="Rechercher un PNJ…" value={q} onChange={(e) => setQ(e.target.value)} />
@@ -51,6 +54,7 @@ export default function Npcs() {
           )}
         </Loaded>
       </Card>
+      {creating && <NpcFormModal onClose={() => setCreating(false)} />}
       {open && <NpcDetail npc={open} onClose={() => setOpenId(null)} />}
     </>
   )
@@ -59,7 +63,9 @@ export default function Npcs() {
 function NpcDetail({ npc, onClose }: { npc: Npc; onClose: () => void }) {
   const events = useAsync(() => api.npcEvents(npc.id), [npc.id])
   const members = useMembers()
+  const { isAdmin } = useAuth()
   const [statusOpen, setStatusOpen] = useState(false)
+  const [modal, setModal] = useState<null | 'edit' | 'delete'>(null)
   return (
     <Modal title={`🎭 ${npc.name}`} onClose={onClose} wide>
       <div className="detail">
@@ -68,7 +74,11 @@ function NpcDetail({ npc, onClose }: { npc: Npc; onClose: () => void }) {
           <div><span>Genre</span><strong>{npc.gender ?? '—'}</strong></div><div><span>Âge</span><strong>{ageInLunes(npc.initial_age_lunes, npc.aging_start_date) ?? '—'} lunes</strong></div>
           <div><span>Statut</span><strong><StatusBadge c={npc} />{npc.dead && npc.afterlife && <> → {npc.afterlife}</>}</strong></div><div><span>Salon de fiche</span><strong>{npc.sheet_channel_id ? '✅ lié' : '❌ aucun'}</strong></div>
         </div>
-        <div className="row gap"><button className="btn" onClick={() => setStatusOpen(true)}>🕯️ Mort / disparition / retour</button></div>
+        <div className="row gap wrap">
+          <button className="btn" onClick={() => setModal('edit')}>✏️ Modifier</button>
+          <button className="btn" onClick={() => setStatusOpen(true)}>🕯️ Mort / disparition / retour</button>
+          {isAdmin && <button className="btn btn-danger" onClick={() => setModal('delete')}>🗑️ Supprimer</button>}
+        </div>
         <p className="muted small">Le baptême d'un PNJ se fait pour l'instant avec <code>/bapteme baptiser</code> sur Discord.</p>
         <h3>Historique</h3>
         <Loaded state={events}>
@@ -80,6 +90,8 @@ function NpcDetail({ npc, onClose }: { npc: Npc; onClose: () => void }) {
           )}
         </Loaded>
       </div>
+      {modal === 'edit' && <NpcFormModal npc={npc} onClose={() => setModal(null)} />}
+      {modal === 'delete' && <DeleteModal kind="PNJ" entity={npc} onClose={() => { setModal(null); onClose() }} />}
       {statusOpen && <StatusModal entity={{ kind: 'PNJ', data: npc }} onClose={() => setStatusOpen(false)} />}
     </Modal>
   )

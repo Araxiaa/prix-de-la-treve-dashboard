@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { BaptemeModal, HpModal, StatusModal } from '../components/actions'
+import { ArchiveModal, CharacterFormModal, DeleteModal, HandicapsModal, SkillsModal, StatsModal } from '../components/manage'
+import { useAuth } from '../lib/auth'
 import { Badge, Card, Empty, Loaded, Modal, PageHeader } from '../components/ui'
 import { api } from '../lib/api'
 import { CLANS, CLAN_EMOJI, RANKS, ageInLunes, dateTime, describeReason, norm, relativeTime } from '../lib/format'
@@ -22,6 +24,7 @@ export default function Characters() {
   const [status, setStatus] = useState<Status>('actif')
   const [page, setPage] = useState(0)
   const [openId, setOpenId] = useState<number | null>(null)
+  const [creating, setCreating] = useState(false)
 
   const rows = useMemo(() => {
     const needle = norm(q)
@@ -35,7 +38,7 @@ export default function Characters() {
 
   return (
     <>
-      <PageHeader title="Personnages (OC)" subtitle={`${rows.length} résultat(s)`} />
+      <PageHeader title="Personnages (OC)" subtitle={`${rows.length} résultat(s)`} actions={<button className="btn btn-primary" onClick={() => setCreating(true)}>➕ Nouvel OC</button>} />
       <Card>
         <div className="filters">
           <input className="search" placeholder="Rechercher un nom, un joueur, un préfixe…" value={q} onChange={(e) => { setQ(e.target.value); setPage(0) }} />
@@ -69,6 +72,7 @@ export default function Characters() {
           )}
         </Loaded>
       </Card>
+      {creating && <CharacterFormModal onClose={() => setCreating(false)} />}
       {open && <CharacterDetail character={open} playerName={members.name(open.user_id)} staffName={members.name} onClose={() => setOpenId(null)} />}
     </>
   )
@@ -76,7 +80,8 @@ export default function Characters() {
 
 function CharacterDetail({ character: c, playerName, staffName, onClose }: { character: Character; playerName: string; staffName: (id: string | null) => string; onClose: () => void }) {
   const history = useAsync(() => api.hpHistory(c.id), [c.id])
-  const [modal, setModal] = useState<null | 'bapteme' | 'hp' | 'statut'>(null)
+  const { isAdmin } = useAuth()
+  const [modal, setModal] = useState<null | 'bapteme' | 'hp' | 'statut' | 'edit' | 'stats' | 'skills' | 'handicaps' | 'archive' | 'delete'>(null)
   const age = ageInLunes(c.initial_age_lunes, c.aging_start_date)
   return (
     <Modal title={`${CLAN_EMOJI[c.clan] ?? '🐾'} ${c.name}`} onClose={onClose} wide>
@@ -92,6 +97,14 @@ function CharacterDetail({ character: c, playerName, staffName, onClose }: { cha
           <button className="btn btn-primary" disabled={c.dead} onClick={() => setModal('bapteme')}>🎉 Baptiser</button>
           <button className="btn" disabled={c.dead} onClick={() => setModal('hp')}>❤️ Modifier les PV</button>
           <button className="btn" onClick={() => setModal('statut')}>🕯️ Mort / disparition / retour</button>
+        </div>
+        <div className="row gap wrap">
+          <button className="btn" onClick={() => setModal('edit')}>✏️ Modifier la fiche</button>
+          <button className="btn" disabled={c.dead} onClick={() => setModal('stats')}>📊 PV max · PA · vies</button>
+          <button className="btn" onClick={() => setModal('skills')}>🎯 Compétences</button>
+          <button className="btn" onClick={() => setModal('handicaps')}>⚠️ Handicaps</button>
+          <button className="btn" onClick={() => setModal('archive')}>{c.archived ? '↩️ Désarchiver' : '🗄️ Archiver'}</button>
+          {isAdmin && <button className="btn btn-danger" onClick={() => setModal('delete')}>🗑️ Supprimer</button>}
         </div>
         <h3>Chronologie</h3>
         <Loaded state={history}>
@@ -113,6 +126,12 @@ function CharacterDetail({ character: c, playerName, staffName, onClose }: { cha
       {modal === 'bapteme' && <BaptemeModal character={c} onClose={() => setModal(null)} />}
       {modal === 'hp' && <HpModal character={c} onClose={() => setModal(null)} />}
       {modal === 'statut' && <StatusModal entity={{ kind: 'OC', data: c }} onClose={() => setModal(null)} />}
+      {modal === 'edit' && <CharacterFormModal character={c} onClose={() => setModal(null)} />}
+      {modal === 'stats' && <StatsModal character={c} onClose={() => setModal(null)} />}
+      {modal === 'skills' && <SkillsModal character={c} onClose={() => setModal(null)} />}
+      {modal === 'handicaps' && <HandicapsModal character={c} onClose={() => setModal(null)} />}
+      {modal === 'archive' && <ArchiveModal character={c} onClose={() => setModal(null)} />}
+      {modal === 'delete' && <DeleteModal kind="OC" entity={c} onClose={() => { setModal(null); onClose() }} />}
     </Modal>
   )
 }

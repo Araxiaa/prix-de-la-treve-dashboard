@@ -1,0 +1,25 @@
+// Barème officiel des handicaps (copie de Bubulle_bot/handicaps.py) : malus en % appliqué aux jets, selon l'origine.
+export const HANDICAPS: Record<string, { Naissance: number; Accident: number }> = {
+  "Cécité": { Naissance: 40, Accident: 50 },
+  "Borgne": { Naissance: 20, Accident: 30 },
+  "Myope": { Naissance: 5, Accident: 10 },
+  "Cataracte": { Naissance: 20, Accident: 30 },
+  "Surdité": { Naissance: 40, Accident: 50 },
+  "Malentendant": { Naissance: 20, Accident: 30 },
+  "Patte en moins": { Naissance: 40, Accident: 60 },
+  "Queue en moins": { Naissance: 10, Accident: 30 },
+  "Patte folle": { Naissance: 20, Accident: 40 },
+  "Asthme": { Naissance: 10, Accident: 20 },
+  "Museau Plat": { Naissance: 10, Accident: 10 },
+  "Maladie Pulmonaire": { Naissance: 20, Accident: 40 },
+  "Arthrose": { Naissance: 5, Accident: 10 },
+  "Paralysie (0-10%)": { Naissance: 20, Accident: 30 },
+  "Paralysie (10%-30%)": { Naissance: 40, Accident: 60 },
+  "Paralysie (30%-50%)": { Naissance: 70, Accident: 90 },
+  "Perte odorat": { Naissance: 40, Accident: 50 },
+  "Sans griffe": { Naissance: 20, Accident: 40 },
+  "Brûlure (2nd degré)": { Naissance: 20, Accident: 20 },
+  "Brûlure (3è degré)": { Naissance: 50, Accident: 50 },
+  "Maladie auto-immune": { Naissance: 60, Accident: 60 },
+}
+export const SKILLS = ['Combat', 'Chasse', 'Soin', 'Discrétion', 'Pistage', 'Agilité'] as const

@@ -1,6 +1,6 @@
 import { DEMO, supabase } from './supabase'
 import type {
-  Access, ActionDef, BotName, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member,
+  Access, ActionDef, BotName, CharHandicap, Skills, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member,
   Npc, NpcEvent, PreyLot, Sanction, Thread, XpRow,
 } from './types'
 
@@ -28,6 +28,13 @@ export const api = {
   characters: async (): Promise<Character[]> =>
     DEMO ? (await demo()).characters : run(supabase.from('characters').select(CHARACTER_COLUMNS).order('name').limit(5000)),
   npcs: async (): Promise<Npc[]> => (DEMO ? (await demo()).npcs : run(supabase.from('npcs').select(NPC_COLUMNS).order('name').limit(5000))),
+  skills: async (id: number): Promise<Skills> => {
+    if (DEMO) return (await demo()).skills
+    const rows = await run<{ skill_name: string; skill_value: number }[]>(supabase.from('character_skills').select('skill_name,skill_value').eq('character_id', id))
+    return Object.fromEntries(rows.map((r) => [r.skill_name, r.skill_value]))
+  },
+  handicaps: async (id: number): Promise<CharHandicap[]> =>
+    DEMO ? (await demo()).handicaps : run(supabase.from('character_handicaps').select('handicap_name,origin').eq('character_id', id)),
   hpHistory: async (id: number): Promise<HpEntry[]> =>
     DEMO ? (await demo()).hpHistory : run(supabase.from('hp_history').select('id,change,new_hp,reason,staff_id,timestamp').eq('character_id', id).order('timestamp', { ascending: false }).limit(60)),
   npcEvents: async (id: number): Promise<NpcEvent[]> =>

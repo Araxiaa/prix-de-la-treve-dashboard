@@ -31,6 +31,8 @@ const npcs: Npc[] = ['Vieux Tilleul', 'Jeune Pousse', 'Veilleur', 'Grande Branch
 const members: Member[] = [...characters.map((c) => c.user_id), String(555555555555555555n)].map((id, i) => ({
   guild_id: G1, user_id: id, display_name: ['Mélodie', 'Thomas', 'Léa', 'Karim', 'Sasha', 'Inès', 'Yanis', 'Camille', 'Noé', 'Lou', 'Eliott', 'Maëlys', 'Modo Démo'][i % 13], avatar_url: null,
 }))
+const skills = { Combat: 60, Chasse: 40, Soin: 20, Discrétion: 50, Pistage: 45, Agilité: 55 }
+const handicaps = [{ handicap_name: 'Myope', origin: 'Naissance' }]
 const hpHistory: HpEntry[] = [
   { id: 1, change: -8, new_hp: 42, reason: '[Combat] Attaque de Nuage', staff_id: null, timestamp: ago(1) },
   { id: 2, change: 0, new_hp: 50, reason: '[Baptême : Petitnuage → Nuage] Cérémonie', staff_id: '1', timestamp: ago(5) },
@@ -80,7 +82,7 @@ let nextId = 100
 const pending = new Map<number, Job>()
 
 export default {
-  access, actions, members, characters, npcs, hpHistory, npcEvents, threads, prey, herbarium, convalescences, sanctions, xp, lifecycle, calendar, botStatus, jobs,
+  skills, handicaps, access, actions, members, characters, npcs, hpHistory, npcEvents, threads, prey, herbarium, convalescences, sanctions, xp, lifecycle, calendar, botStatus, jobs,
   async enqueue(bot: BotName, action: string, guild: string, payload: Record<string, unknown>): Promise<number> {
     const id = nextId++
     pending.set(id, { id, bot, action, guild_id: guild, payload, status: 'pending', result: null, error: null, requested_by: '1', requested_name: 'Cheffe Démo', created_at: new Date().toISOString(), started_at: null, finished_at: null })

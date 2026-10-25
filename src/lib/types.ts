@@ -16,6 +16,8 @@ export interface Npc {
   initial_age_lunes: number; aging_start_date: string; sheet_channel_id: string | null; sheet_guild_id: string | null
   dead: boolean; missing: boolean; afterlife: string | null; created_at: string
 }
+export interface CharHandicap { handicap_name: string; origin: string }
+export type Skills = Record<string, number>
 export interface HpEntry { id: number; change: number; new_hp: number; reason: string | null; staff_id: string | null; timestamp: string }
 export interface NpcEvent { id: number; kind: string; reason: string | null; staff_id: string | null; created_at: string }
 export interface Thread { thread_id: string; channel_id: string; creator_id: string; title: string | null; prefixes_oc: string | null; last_message_at: string; relance_faite: boolean; guild_id: string | null; created_at: string }

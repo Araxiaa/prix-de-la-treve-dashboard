@@ -58,7 +58,8 @@ npm run deploy     # build + publication sur GitHub Pages (branche gh-pages)
 | Section | Lecture | Actions (exécutées par le bot) |
 |---|---|---|
 | Vue d'ensemble | stats, calendrier RP, état des bots, alertes | — |
-| Personnages / PNJ (Bubulle) | liste filtrable, fiche, chronologie | baptême, PV, mort / disparition / retour |
+| Personnages (Bubulle) | liste filtrable, fiche, chronologie, compétences, handicaps | **créer**, modifier (nom, clan, rang, âge, joueur, genre, préfixe, avatar), baptême, PV, PV max / PA / vies, compétences, handicaps, mort / disparition / retour, archiver, supprimer (admin) |
+| PNJ (Bubulle) | liste filtrable, fiche, historique | **créer**, modifier, mort / disparition / retour, supprimer (admin) |
 | Modération, Niveaux (Bubulle) | sanctions, classement XP | — (se fait sur Discord avec `/mod`) |
 | Fils RP (Ricochet) | activité, rappels, clôtures | remettre la fiche de scène à l'instant présent |
 | Gibier & herbier (Ricochet) | réserves, infirmerie | ajouter / retirer du gibier |
