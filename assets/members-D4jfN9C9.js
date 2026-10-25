@@ -1,0 +1,1 @@
+import{u as r,a as o,r as n}from"./index-BaDkLdK8.js";import{u as m}from"./hooks-B6UP04XA.js";function p(){const{guild:s}=r(),a=m(()=>s?o.members(s):Promise.resolve([]),[s]),t=n.useMemo(()=>new Map((a.data??[]).map(e=>[e.user_id,e])),[a.data]);return{name:e=>e?t.get(e)?.display_name??`Membre …${e.slice(-4)}`:"—",byId:t,loading:a.data===null}}export{p as u};
