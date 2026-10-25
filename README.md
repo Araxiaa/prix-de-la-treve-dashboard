@@ -67,6 +67,14 @@ npm run deploy     # build + publication sur GitHub Pages (branche gh-pages)
 | Bots & journal | état des bots, historique des demandes | — |
 | Commandes (Bubulle) | catalogue publié par le bot | **toutes les commandes `/mod`, `/calendar`, `/weather`, `/perms`, `/niveau`, `/groupe`, `/mentor`… en formulaires** (mêmes droits et mêmes logs que sur Discord) |
 
+## Commandes de Bubulle depuis le site
+
+Au démarrage, Bubulle publie dans `dashboard_commands` la liste des commandes autorisées (liste blanche `EXPOSED` dans
+`cogs/dashboard.py`) avec leurs paramètres ; le site en fait des formulaires (recherche de membres / salons / rôles / personnages,
+validation, confirmation pour les commandes admin, favoris, historique avec « Relancer »). La demande `command.run` est exécutée par
+Bubulle avec le vrai code de la commande, sous l'identité du staff demandeur (mêmes droits, mêmes logs). Pour exposer une commande de
+plus : ajoute son nom dans `EXPOSED`, redémarre Bubulle — rien à changer côté site.
+
 ## Ajouter une nouvelle action
 
 1. Ajoute-la dans la table `dashboard_actions` (bot, action, libellé, niveau minimal `staff`/`admin`) — migration Supabase.

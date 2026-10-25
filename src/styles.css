@@ -69,6 +69,16 @@ input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; p
 .btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: 8px 14px; cursor: pointer; text-decoration: none; color: var(--text); display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
 .btn:hover:not(:disabled) { border-color: var(--accent); } .btn:disabled { opacity: .45; cursor: not-allowed; }
 .btn-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; } .btn-danger { background: var(--bad); border-color: var(--bad); color: #fff; font-weight: 700; }
+.cmd-card-wrap { position: relative; display: flex; } .cmd-card-wrap .cmd-card { flex: 1; padding-right: 36px; }
+.cmd-star { position: absolute; top: 6px; right: 6px; background: none; border: 0; cursor: pointer; font-size: 1.15rem; color: var(--muted); line-height: 1; padding: 4px; border-radius: 6px; }
+.cmd-star:hover, .cmd-star.on { color: var(--warn); }
+.wrap { flex-wrap: wrap; }
+.combo { position: relative; } .combo input { width: 100%; }
+.combo-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: 0; cursor: pointer; color: var(--muted); padding: 4px 6px; }
+.combo-list { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 4px; list-style: none; max-height: 260px; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+.combo-list li { padding: 7px 10px; border-radius: 7px; cursor: pointer; } .combo-list li.active { background: var(--panel-2); outline: 1px solid var(--accent); }
+.combo-empty { color: var(--muted); cursor: default !important; font-size: .9rem; }
+input[aria-invalid="true"] { border-color: var(--bad); }
 .cmd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
 .cmd-card { text-align: left; display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); cursor: pointer; font: inherit; }
 .cmd-card:hover:not(:disabled) { border-color: var(--accent); } .cmd-card:disabled { opacity: .5; cursor: not-allowed; }

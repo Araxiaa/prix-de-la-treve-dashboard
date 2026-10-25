@@ -1,3 +1,4 @@
+import { cached } from './cache'
 import { DEMO, supabase } from './supabase'
 import type {
   Access, ActionDef, ChannelRow, CommandDef, RoleRow, BotName, CharHandicap, Skills, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member,
@@ -24,13 +25,21 @@ export const api = {
   access: async (): Promise<Access[]> => (DEMO ? (await demo()).access : run(supabase.from('dashboard_access').select('*'))),
   actions: async (): Promise<ActionDef[]> => (DEMO ? (await demo()).actions : run(supabase.from('dashboard_actions').select('*'))),
   members: async (guild: string): Promise<Member[]> =>
-    DEMO ? (await demo()).members : run(supabase.from('dashboard_members').select('*').eq('guild_id', guild).limit(5000)),
+    DEMO ? (await demo()).members : cached(`members:${guild}`, 5 * 60_000, () => run(supabase.from('dashboard_members').select('*').eq('guild_id', gid(guild)).limit(5000))),
   commands: async (bot: BotName): Promise<CommandDef[]> =>
-    DEMO ? (await demo()).commands.filter((c) => c.bot === bot) : run(supabase.from('dashboard_commands').select('*').eq('bot', bot).order('name').limit(500)),
+    DEMO ? (await demo()).commands.filter((c) => c.bot === bot) : cached(`commands:${bot}`, 5 * 60_000, () => run(supabase.from('dashboard_commands').select('*').eq('bot', bot).order('name').limit(500))),
   channels: async (guild: string): Promise<ChannelRow[]> =>
-    DEMO ? (await demo()).channels : run(supabase.from('dashboard_channels').select('channel_id,name,kind,category,position').eq('guild_id', gid(guild)).order('position').limit(2000)),
+    DEMO ? (await demo()).channels : cached(`channels:${guild}`, 5 * 60_000, () => run(supabase.from('dashboard_channels').select('channel_id,name,kind,category,position').eq('guild_id', gid(guild)).order('position').limit(2000))),
   roles: async (guild: string): Promise<RoleRow[]> =>
-    DEMO ? (await demo()).roles : run(supabase.from('dashboard_roles').select('role_id,name,color,position').eq('guild_id', gid(guild)).order('position', { ascending: false }).limit(1000)),
+    DEMO ? (await demo()).roles : cached(`roles:${guild}`, 5 * 60_000, () => run(supabase.from('dashboard_roles').select('role_id,name,color,position').eq('guild_id', gid(guild)).order('position', { ascending: false }).limit(1000))),
+  /** Noms de groupes et de rangs (suggestions des formulaires de commandes). */
+  factions: async (): Promise<{ groups: string[]; ranks: string[] }> => {
+    if (DEMO) return { groups: ['Dynastie Démo'], ranks: ['Fondateur'] }
+    return cached('factions', 5 * 60_000, async () => {
+      const [f, r] = await Promise.all([run<{ name: string }[]>(supabase.from('factions').select('name').order('name').limit(500)), run<{ rank_name: string }[]>(supabase.from('faction_ranks').select('rank_name').limit(2000))])
+      return { groups: f.map((x) => x.name), ranks: [...new Set(r.map((x) => x.rank_name))].sort() }
+    })
+  },
   characters: async (): Promise<Character[]> =>
     DEMO ? (await demo()).characters : run(supabase.from('characters').select(CHARACTER_COLUMNS).order('name').limit(5000)),
   npcs: async (): Promise<Npc[]> => (DEMO ? (await demo()).npcs : run(supabase.from('npcs').select(NPC_COLUMNS).order('name').limit(5000))),
@@ -64,6 +73,10 @@ export const api = {
   botStatus: async (): Promise<BotStatus[]> => (DEMO ? (await demo()).botStatus : run(supabase.from('bot_status').select('*'))),
   jobs: async (guild: string): Promise<Job[]> =>
     DEMO ? (await demo()).jobs : run(supabase.from('bot_jobs').select('*').eq('guild_id', guild).order('id', { ascending: false }).limit(80)),
+  /** Dernières commandes lancées depuis le site pour un bot. */
+  commandRuns: async (guild: string, bot: BotName): Promise<Job[]> =>
+    DEMO ? (await demo()).jobs.filter((j) => j.action === 'command.run' && j.bot === bot)
+         : run(supabase.from('bot_jobs').select('*').eq('guild_id', gid(guild)).eq('bot', bot).eq('action', 'command.run').order('id', { ascending: false }).limit(30)),
   job: async (id: number): Promise<Job | null> => {
     if (DEMO) return (await demo()).finishJob(id)
     return (await run<Job[]>(supabase.from('bot_jobs').select('*').eq('id', id).limit(1)))[0] ?? null

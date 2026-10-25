@@ -1,18 +1,20 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import { Spinner } from './components/ui'
 import { useAuth } from './lib/auth'
-import Bots from './pages/Bots'
-import Commands from './pages/Commands'
-import Characters from './pages/Characters'
-import Levels from './pages/Levels'
 import Login from './pages/Login'
-import Moderation from './pages/Moderation'
-import Npcs from './pages/Npcs'
-import Overview from './pages/Overview'
-import Repertoire from './pages/Repertoire'
-import Resources from './pages/Resources'
-import Threads from './pages/Threads'
+
+const Bots = lazy(() => import('./pages/Bots'))
+const Commands = lazy(() => import('./pages/Commands'))
+const Characters = lazy(() => import('./pages/Characters'))
+const Levels = lazy(() => import('./pages/Levels'))
+const Moderation = lazy(() => import('./pages/Moderation'))
+const Npcs = lazy(() => import('./pages/Npcs'))
+const Overview = lazy(() => import('./pages/Overview'))
+const Repertoire = lazy(() => import('./pages/Repertoire'))
+const Resources = lazy(() => import('./pages/Resources'))
+const Threads = lazy(() => import('./pages/Threads'))
 
 export default function App() {
   const { session, loading, access, error, signIn, signOut, retry, userName, discordId } = useAuth()
@@ -38,6 +40,7 @@ export default function App() {
     )
   }
   return (
+    <Suspense fallback={<Spinner />}>
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Overview />} />
@@ -53,5 +56,6 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
+    </Suspense>
   )
 }

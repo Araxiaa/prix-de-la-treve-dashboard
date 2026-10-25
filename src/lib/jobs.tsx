@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { api } from './api'
+import { clearCache } from './cache'
 import { useAuth } from './auth'
 import type { BotName, Job } from './types'
 
@@ -56,6 +57,7 @@ export function JobsProvider({ children }: { children: ReactNode }) {
         const job = await api.job(id)
         if (!job) continue
         if (job.status === 'done') {
+          clearCache('dir')
           patch(key, { kind: 'ok', text: job.result?.message ?? 'Fait.' })
           setTick((t) => t + 1)
           setTimeout(() => dismiss(key), 9000)
