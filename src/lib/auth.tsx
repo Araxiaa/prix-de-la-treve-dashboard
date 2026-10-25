@@ -15,7 +15,9 @@ interface AuthState {
   isAdmin: boolean
   userName: string
   userAvatar: string | null
+  discordId: string | null
   setGuild: (id: string) => void
+  retry: () => void
   signIn: () => Promise<void>
   signOut: () => Promise<void>
 }
@@ -31,6 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [guild, setGuildState] = useState<string | null>(() => localStorage.getItem(GUILD_KEY))
+  const [attempt, setAttempt] = useState(0)
 
   // Session : lue au chargement (y compris le retour de Discord), puis suivie.
   useEffect(() => {
@@ -54,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch((e: Error) => { if (alive) setError(e.message) })
       .finally(() => { if (alive) setLoading(false) })
     return () => { alive = false }
-  }, [session])
+  }, [session, attempt])
 
   const current = useMemo(() => access.find((a) => a.guild_id === guild) ?? access[0] ?? null, [access, guild])
   const setGuild = useCallback((id: string) => { localStorage.setItem(GUILD_KEY, id); setGuildState(id) }, [])
@@ -72,11 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const meta = (session?.user?.user_metadata ?? {}) as Record<string, string | undefined>
+  const identity = session?.user?.identities?.find((i) => i.provider === 'discord')
   const value: AuthState = {
     loading, session, access, error, guild: current?.guild_id ?? null, guildName: current?.guild_name ?? 'Serveur', level: current?.level ?? null,
     isAdmin: current?.level === 'admin', setGuild,
     userName: current?.display_name ?? meta.full_name ?? meta.name ?? meta.custom_claims ?? 'Staff',
     userAvatar: current?.avatar_url ?? meta.avatar_url ?? null, signIn, signOut,
+    discordId: (identity?.id as string | undefined) ?? null, retry: () => setAttempt((a) => a + 1),
   }
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }

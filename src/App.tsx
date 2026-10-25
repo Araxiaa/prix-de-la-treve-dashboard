@@ -14,7 +14,7 @@ import Resources from './pages/Resources'
 import Threads from './pages/Threads'
 
 export default function App() {
-  const { session, loading, access, error, signOut } = useAuth()
+  const { session, loading, access, error, signIn, signOut, retry, userName, discordId } = useAuth()
   if (loading) return <div className="center-screen"><Spinner label="Connexion…" /></div>
   if (!session) return <Login />
   if (error || access.length === 0) {
@@ -22,11 +22,16 @@ export default function App() {
       <div className="center-screen">
         <div className="login-card">
           <h1>Accès réservé au staff</h1>
+          <p>Connecté·e avec Discord : <strong>{userName}</strong>{discordId && <><br /><small className="muted">Identifiant Discord : <code>{discordId}</code></small></>}</p>
           <p className="muted">
-            {error ? `Erreur : ${error}` : "Ton compte Discord est bien connecté, mais tu n'es pas reconnu·e comme staff d'un serveur où Bubulle est présent."}
+            {error ? `Erreur : ${error}` : "Ton compte est bien connecté, mais il n'est pas (encore) reconnu comme staff d'un serveur où Bubulle est présent."}
           </p>
-          <p className="muted">La liste des accès est mise à jour par Bubulle toutes les 15 minutes d'après tes rôles Discord. Si tu viens de recevoir un rôle staff, patiente un peu puis reconnecte-toi.</p>
-          <button className="btn" onClick={signOut}>Se déconnecter</button>
+          <p className="muted">La liste des accès est mise à jour par Bubulle toutes les 15 minutes d'après tes rôles Discord (il faut que Bubulle ait été redéployé avec la dernière version). Si ce n'est pas le bon compte, change de compte.</p>
+          <div className="row gap wrap">
+            <button className="btn btn-primary" onClick={retry}>🔄 Réessayer</button>
+            <button className="btn" onClick={async () => { await signOut(); await signIn() }}>Changer de compte Discord</button>
+            <button className="btn" onClick={signOut}>Se déconnecter</button>
+          </div>
         </div>
       </div>
     )
