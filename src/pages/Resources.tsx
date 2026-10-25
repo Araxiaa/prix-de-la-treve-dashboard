@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { GibierModal } from '../components/actions'
 import { Badge, Card, Empty, Loaded, PageHeader, Stat } from '../components/ui'
 import { api } from '../lib/api'
@@ -40,7 +41,8 @@ export default function Resources() {
             </div>
             <div className="grid two">
               <Card title="🌿 Herbier">
-                {herbarium.length === 0 ? <Empty>Aucune plante en réserve.</Empty> : MAIN.map((clan) => {
+                <p className="muted small"><Link to="/herbier">Voir l’herbier complet (toutes les plantes, tous les clans) →</Link></p>
+                {herbarium.length === 0 ? <Empty>Aucune plante en réserve.</Empty> : CLANS.map((clan) => {
                   const lots = herbarium.filter((h) => h.inventory_owner === `clan:${clan}`)
                   if (!lots.length) return null
                   const byName = new Map<string, number>()

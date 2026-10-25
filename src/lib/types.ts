@@ -23,6 +23,7 @@ export interface NpcEvent { id: number; kind: string; reason: string | null; sta
 export interface Thread { thread_id: string; channel_id: string; creator_id: string; title: string | null; prefixes_oc: string | null; last_message_at: string; relance_faite: boolean; guild_id: string | null; created_at: string }
 export interface PreyLot { id: number; clan: string; prey_name: string; portions: number; expires_at: string }
 export interface HerbLot { id: number; inventory_owner: string; plant_name: string; quantity: number; expires_at: string }
+export interface HerbHistory { id: number; inventory_owner: string; action: string; plant_name: string; quantity: number; actor_id: string; reason: string | null; created_at: string }
 export interface Convalescence { character_id: number; character_name: string; clan: string | null; reason: string | null; healer_name: string | null; end_date: string; user_id?: string | null }
 export interface Sanction { id: number; guild_id: string; user_id: string; moderator_id: string; kind: string; reason: string | null; active: boolean; created_at: string }
 export interface XpRow { user_id: string; guild_id: string; text_xp: number; voice_xp: number; bonus_xp: number }

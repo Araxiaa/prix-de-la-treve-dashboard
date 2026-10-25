@@ -9,7 +9,7 @@ const NAV: { group: string; items: { to: string; label: string; icon: string }[]
   { group: 'Bubulle · gestion', items: [
     { to: '/personnages', label: 'Personnages (OC)', icon: '🐾' }, { to: '/pnj', label: 'PNJ', icon: '🎭' },
     { to: '/moderation', label: 'Modération', icon: '🛡️' }, { to: '/niveaux', label: 'Niveaux', icon: '⭐' }, { to: '/commandes', label: 'Commandes', icon: '⌨️' }] },
-  { group: 'Ricochet · rôle-play', items: [{ to: '/fils', label: 'Fils RP', icon: '🧵' }, { to: '/ressources', label: 'Gibier & herbier', icon: '🍖' }] },
+  { group: 'Ricochet · rôle-play', items: [{ to: '/fils', label: 'Fils RP', icon: '🧵' }, { to: '/herbier', label: 'Herbier', icon: '🌿' }, { to: '/ressources', label: 'Gibier & infirmerie', icon: '🍖' }] },
   { group: 'Vigie · fiches', items: [{ to: '/repertoire', label: 'Répertoire Fiche', icon: '📂' }] },
 ]
 

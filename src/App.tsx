@@ -8,6 +8,7 @@ import Login from './pages/Login'
 const Bots = lazy(() => import('./pages/Bots'))
 const Commands = lazy(() => import('./pages/Commands'))
 const Characters = lazy(() => import('./pages/Characters'))
+const Herbier = lazy(() => import('./pages/Herbier'))
 const Levels = lazy(() => import('./pages/Levels'))
 const Moderation = lazy(() => import('./pages/Moderation'))
 const Npcs = lazy(() => import('./pages/Npcs'))
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="moderation" element={<Moderation />} />
         <Route path="niveaux" element={<Levels />} />
         <Route path="fils" element={<Threads />} />
+        <Route path="herbier" element={<Herbier />} />
         <Route path="ressources" element={<Resources />} />
         <Route path="repertoire" element={<Repertoire />} />
         <Route path="bots" element={<Bots />} />

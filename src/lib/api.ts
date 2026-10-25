@@ -1,7 +1,7 @@
 import { cached } from './cache'
 import { DEMO, supabase } from './supabase'
 import type {
-  Access, ActionDef, ChannelRow, CommandDef, RoleRow, BotName, CharHandicap, Skills, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member,
+  Access, ActionDef, ChannelRow, CommandDef, HerbHistory, RoleRow, BotName, CharHandicap, Skills, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member,
   Npc, NpcEvent, PreyLot, Sanction, Thread, XpRow,
 } from './types'
 
@@ -60,6 +60,11 @@ export const api = {
     DEMO ? (await demo()).prey : run(supabase.from('prey_stock').select('id,clan,prey_name,portions,expires_at').gte('expires_at', new Date().toISOString().slice(0, 10)).limit(5000)),
   herbarium: async (): Promise<HerbLot[]> =>
     DEMO ? (await demo()).herbarium : run(supabase.from('herbarium').select('id,inventory_owner,plant_name,quantity,expires_at').gte('expires_at', new Date().toISOString().slice(0, 10)).limit(5000)),
+  /** Tous les lots (périmés compris : on les nomme au lieu de les cacher). */
+  herbariumAll: async (): Promise<HerbLot[]> =>
+    DEMO ? (await demo()).herbarium : run(supabase.from('herbarium').select('id,inventory_owner,plant_name,quantity,expires_at').limit(5000)),
+  herbariumHistory: async (): Promise<HerbHistory[]> =>
+    DEMO ? [] : run(supabase.from('herbarium_history').select('id,inventory_owner,action,plant_name,quantity,actor_id,reason,created_at').order('id', { ascending: false }).limit(300)),
   convalescences: async (): Promise<Convalescence[]> =>
     DEMO ? (await demo()).convalescences : run(supabase.from('convalescences').select('*').order('end_date').limit(500)),
   sanctions: async (guild: string): Promise<Sanction[]> =>

@@ -53,6 +53,8 @@ const herbarium: HerbLot[] = [
   { id: 1, inventory_owner: 'clan:Clan du Vent', plant_name: 'Cataire', quantity: 6, expires_at: ahead(5) },
   { id: 2, inventory_owner: 'clan:Clan du Vent', plant_name: 'Bardane', quantity: 3, expires_at: ahead(2) },
   { id: 3, inventory_owner: 'clan:Clan du Tonnerre', plant_name: 'Souci', quantity: 9, expires_at: ahead(7) },
+  { id: 4, inventory_owner: 'clan:Clan du Vent', plant_name: 'Prêle', quantity: 8, expires_at: ahead(-10) },
+  { id: 5, inventory_owner: 'clan:Clan du Vent', plant_name: 'Plante Mystère', quantity: 2, expires_at: ahead(9) },
 ]
 const convalescences: Convalescence[] = [{ character_id: 4, character_name: 'Cendre', clan: "Clan de l'Ombre", reason: 'Griffure profonde', healer_name: 'Brume', end_date: new Date(Date.now() + 5 * 86_400_000).toISOString() }]
 const sanctions: Sanction[] = [

@@ -61,6 +61,7 @@ npm run deploy     # build + publication sur GitHub Pages (branche gh-pages)
 | Personnages (Bubulle) | liste filtrable, fiche, chronologie, compétences, handicaps | **créer**, modifier (nom, clan, rang, âge, joueur, genre, préfixe, avatar), baptême, PV, PV max / PA / vies, compétences, handicaps, mort / disparition / retour, archiver, supprimer (admin) |
 | PNJ (Bubulle) | liste filtrable, fiche, historique | **créer**, modifier, mort / disparition / retour, supprimer (admin) |
 | Modération, Niveaux (Bubulle) | sanctions, classement XP | — (se fait sur Discord avec `/mod`) |
+| Herbier (Ricochet) | les 26 plantes de chaque clan (même à 0), péremption par lot, périmées nommées, historique | ajouter / retirer des plantes, jeter les périmées |
 | Fils RP (Ricochet) | activité, rappels, clôtures | remettre la fiche de scène à l'instant présent |
 | Gibier & herbier (Ricochet) | réserves, infirmerie | ajouter / retirer du gibier |
 | Répertoire Fiche (Vigie) | OC sans salon, salle d'attente | créer un salon de fiche, annoncer les lunes, appliquer le rôle d'accès (admin) |
