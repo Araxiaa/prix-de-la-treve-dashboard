@@ -7,9 +7,9 @@ import { clanStock, effectLabel, isSoon, type PlantStock } from '../lib/herbier'
 import { useAsync } from '../lib/hooks'
 import { useJobs } from '../lib/jobs'
 import { useMembers } from '../lib/members'
-import { PLANT_LIMIT, SEASONS, type PlantCategory } from '../lib/plants'
+import { PLANTS, PLANT_LIMIT, SEASONS, type PlantCategory } from '../lib/plants'
 
-const CATS: { key: PlantCategory; label: string }[] = [{ key: 'soin', label: '💚 Soin' }, { key: 'neutre', label: '🌾 Neutre' }, { key: 'toxique', label: '☠️ Toxique' }]
+const CATS: { key: PlantCategory; label: string }[] = [{ key: 'soin', label: '💚 Soin' }, { key: 'miel', label: '🍯 Miel' }, { key: 'neutre', label: '🌾 Neutre' }, { key: 'toxique', label: '☠️ Toxique' }]
 const today = () => new Date().toISOString().slice(0, 10)
 
 export default function Herbier() {
@@ -110,7 +110,7 @@ function ClanView({ clan, lots, history, q, setQ, onlyStock, setOnlyStock, setMo
       <Card title="Derniers mouvements">
         {mine.length === 0 ? <Empty>Aucun mouvement enregistré pour ce clan.</Empty> : (
           <ul className="plain">{mine.map((h) => (
-            <li key={h.id}>{h.action === 'add' ? '➕' : '➖'} <strong>{h.plant_name}</strong> ×{h.quantity} <span className="muted">· {members(h.actor_id)} · {relativeTime(h.created_at)}{h.reason ? ` · ${h.reason}` : ''}</span></li>
+            <li key={h.id}>{h.action === 'add' ? '➕' : h.action === 'remove' ? '➖' : '🍂'} <strong>{h.plant_name}</strong> ×{h.quantity} <span className="muted">· {members(h.actor_id)} · {relativeTime(h.created_at)}{h.reason ? ` · ${h.reason}` : ''}</span></li>
           ))}</ul>
         )}
       </Card>
@@ -133,7 +133,7 @@ function PlantModal({ clan, mode, plant, onClose }: { clan: string; mode: 'add' 
   return (
     <Modal title={`🌿 ${add ? 'Ajouter' : 'Retirer'} · ${plant} · ${clan}`} onClose={onClose}>
       <form onSubmit={submit} className="stack">
-        <Field label="Quantité (1 à 20)" hint={add ? `La réserve ne peut pas dépasser ${PLANT_LIMIT} unités par plante. Les plantes ajoutées périment dans 30 jours.` : 'Retrait par ordre de péremption (les plus anciennes d’abord).'}>
+        <Field label="Quantité (1 à 20)" hint={add ? `La réserve ne peut pas dépasser ${PLANT_LIMIT} unités par plante. Ce lot périmera dans ${PLANTS.find((p) => p.name === plant)?.shelfDays ?? 30} jours.` : 'Retrait par ordre de péremption (les plus anciennes d’abord).'}>
           <input type="number" min={1} max={20} value={qty} onChange={(e) => setQty(Number(e.target.value))} autoFocus />
         </Field>
         <Field label="Raison (facultatif)"><input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={200} placeholder={add ? 'Cueillette, trouvaille…' : 'Correction, événement RP…'} /></Field>
