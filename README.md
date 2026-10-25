@@ -65,6 +65,7 @@ npm run deploy     # build + publication sur GitHub Pages (branche gh-pages)
 | Gibier & herbier (Ricochet) | réserves, infirmerie | ajouter / retirer du gibier |
 | Répertoire Fiche (Vigie) | OC sans salon, salle d'attente | créer un salon de fiche, annoncer les lunes, appliquer le rôle d'accès (admin) |
 | Bots & journal | état des bots, historique des demandes | — |
+| Commandes (Bubulle) | catalogue publié par le bot | **toutes les commandes `/mod`, `/calendar`, `/weather`, `/perms`, `/niveau`, `/groupe`, `/mentor`… en formulaires** (mêmes droits et mêmes logs que sur Discord) |
 
 ## Ajouter une nouvelle action
 

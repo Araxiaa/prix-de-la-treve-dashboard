@@ -1,6 +1,6 @@
 // Données fictives pour `npm run demo` (prévisualisation de l'interface sans connexion). Jamais incluses dans le site publié.
 import type {
-  Access, ActionDef, BotName, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member, Npc, NpcEvent,
+  Access, ActionDef, BotName, ChannelRow, CommandDef, RoleRow, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member, Npc, NpcEvent,
   PreyLot, Sanction, Thread, XpRow,
 } from './types'
 
@@ -81,8 +81,20 @@ const jobs: Job[] = [
 let nextId = 100
 const pending = new Map<number, Job>()
 
+const P = (name: string, type: string, required: boolean, description: string, extra: Record<string, unknown> = {}) =>
+  ({ name, type, required, description, min: null, max: null, min_length: null, max_length: null, choices: [], autocomplete: null, ...extra }) as CommandDef['params'][number]
+const commands: CommandDef[] = [
+  { bot: 'bubulle', name: 'mod avertir', description: 'Avertir un membre', level: 'staff', grp: 'mod', needs_channel: false, note: null, params: [P('membre', 'user', true, 'Le membre'), P('raison', 'string', false, 'Motif')] },
+  { bot: 'bubulle', name: 'mod mute', description: 'Rendre muet un membre', level: 'staff', grp: 'mod', needs_channel: false, note: null, params: [P('membre', 'user', true, 'Le membre'), P('duree', 'string', true, 'Ex. 30m, 2h, 1j'), P('raison', 'string', false, 'Motif')] },
+  { bot: 'bubulle', name: 'mod bannir', description: '[ADMIN] Bannir un membre', level: 'admin', grp: 'mod', needs_channel: false, note: null, params: [P('membre', 'user', true, 'Le membre'), P('raison', 'string', false, 'Motif')] },
+  { bot: 'bubulle', name: 'mod purger', description: 'Supprimer des messages dans un salon', level: 'staff', grp: 'mod', needs_channel: true, note: null, params: [P('nombre', 'integer', true, 'Nombre de messages', { min: 1, max: 100 })] },
+  { bot: 'bubulle', name: 'character soigner', description: 'Soigner un personnage', level: 'staff', grp: 'character', needs_channel: false, note: null, params: [P('perso', 'string', true, 'Personnage', { autocomplete: 'perso' }), P('montant', 'integer', true, 'PV rendus', { min: 1, max: 100 }), P('raison', 'string', false, 'Motif')] },
+  { bot: 'bubulle', name: 'calendar demarrer', description: '[ADMIN] Démarrer le calendrier', level: 'admin', grp: 'calendar', needs_channel: false, note: null, params: [P('saison', 'string', true, 'Saison', { choices: [{ name: 'Printemps', value: 'printemps' }, { name: 'Été', value: 'ete' }] })] },
+]
+const channels: ChannelRow[] = [{ channel_id: '1', name: 'général', kind: 'text', category: 'Hors-RP', position: 1 }, { channel_id: '2', name: 'annonces', kind: 'text', category: 'Hors-RP', position: 2 }]
+const roles: RoleRow[] = [{ role_id: '10', name: 'Staff', color: 0x3498db, position: 10 }, { role_id: '11', name: 'Membre', color: 0, position: 1 }]
 export default {
-  skills, handicaps, access, actions, members, characters, npcs, hpHistory, npcEvents, threads, prey, herbarium, convalescences, sanctions, xp, lifecycle, calendar, botStatus, jobs,
+  commands, channels, roles, skills, handicaps, access, actions, members, characters, npcs, hpHistory, npcEvents, threads, prey, herbarium, convalescences, sanctions, xp, lifecycle, calendar, botStatus, jobs,
   async enqueue(bot: BotName, action: string, guild: string, payload: Record<string, unknown>): Promise<number> {
     const id = nextId++
     pending.set(id, { id, bot, action, guild_id: guild, payload, status: 'pending', result: null, error: null, requested_by: '1', requested_name: 'Cheffe Démo', created_at: new Date().toISOString(), started_at: null, finished_at: null })

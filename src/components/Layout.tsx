@@ -8,7 +8,7 @@ const NAV: { group: string; items: { to: string; label: string; icon: string }[]
   { group: 'Général', items: [{ to: '/', label: "Vue d'ensemble", icon: '🏠' }, { to: '/bots', label: 'Bots & journal', icon: '🤖' }] },
   { group: 'Bubulle · gestion', items: [
     { to: '/personnages', label: 'Personnages (OC)', icon: '🐾' }, { to: '/pnj', label: 'PNJ', icon: '🎭' },
-    { to: '/moderation', label: 'Modération', icon: '🛡️' }, { to: '/niveaux', label: 'Niveaux', icon: '⭐' }] },
+    { to: '/moderation', label: 'Modération', icon: '🛡️' }, { to: '/niveaux', label: 'Niveaux', icon: '⭐' }, { to: '/commandes', label: 'Commandes', icon: '⌨️' }] },
   { group: 'Ricochet · rôle-play', items: [{ to: '/fils', label: 'Fils RP', icon: '🧵' }, { to: '/ressources', label: 'Gibier & herbier', icon: '🍖' }] },
   { group: 'Vigie · fiches', items: [{ to: '/repertoire', label: 'Répertoire Fiche', icon: '📂' }] },
 ]

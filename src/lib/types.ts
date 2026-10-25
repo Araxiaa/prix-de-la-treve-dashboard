@@ -36,4 +36,12 @@ export interface Job {
   result: { message?: string; details?: string } | null; error: string | null; requested_by: string; requested_name: string | null
   created_at: string; started_at: string | null; finished_at: string | null
 }
+export interface CommandParam {
+  name: string; type: 'string' | 'integer' | 'number' | 'boolean' | 'user' | 'channel' | 'role' | 'mentionable'; required: boolean; description: string
+  min: number | null; max: number | null; min_length: number | null; max_length: number | null
+  choices: { name: string; value: string | number }[]; autocomplete: string | null
+}
+export interface CommandDef { bot: BotName; name: string; description: string; level: 'staff' | 'admin'; grp: string; params: CommandParam[]; needs_channel: boolean; note: string | null }
+export interface ChannelRow { channel_id: string; name: string; kind: string; category: string | null; position: number }
+export interface RoleRow { role_id: string; name: string; color: number; position: number }
 export interface ActionDef { bot: BotName; action: string; label: string; min_level: 'staff' | 'admin' }

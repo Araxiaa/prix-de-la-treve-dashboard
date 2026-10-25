@@ -1,6 +1,6 @@
 import { DEMO, supabase } from './supabase'
 import type {
-  Access, ActionDef, BotName, CharHandicap, Skills, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member,
+  Access, ActionDef, ChannelRow, CommandDef, RoleRow, BotName, CharHandicap, Skills, BotStatus, CalendarConfig, Character, Convalescence, HerbLot, HpEntry, Job, Lifecycle, Member,
   Npc, NpcEvent, PreyLot, Sanction, Thread, XpRow,
 } from './types'
 
@@ -25,6 +25,12 @@ export const api = {
   actions: async (): Promise<ActionDef[]> => (DEMO ? (await demo()).actions : run(supabase.from('dashboard_actions').select('*'))),
   members: async (guild: string): Promise<Member[]> =>
     DEMO ? (await demo()).members : run(supabase.from('dashboard_members').select('*').eq('guild_id', guild).limit(5000)),
+  commands: async (bot: BotName): Promise<CommandDef[]> =>
+    DEMO ? (await demo()).commands.filter((c) => c.bot === bot) : run(supabase.from('dashboard_commands').select('*').eq('bot', bot).order('name').limit(500)),
+  channels: async (guild: string): Promise<ChannelRow[]> =>
+    DEMO ? (await demo()).channels : run(supabase.from('dashboard_channels').select('channel_id,name,kind,category,position').eq('guild_id', gid(guild)).order('position').limit(2000)),
+  roles: async (guild: string): Promise<RoleRow[]> =>
+    DEMO ? (await demo()).roles : run(supabase.from('dashboard_roles').select('role_id,name,color,position').eq('guild_id', gid(guild)).order('position', { ascending: false }).limit(1000)),
   characters: async (): Promise<Character[]> =>
     DEMO ? (await demo()).characters : run(supabase.from('characters').select(CHARACTER_COLUMNS).order('name').limit(5000)),
   npcs: async (): Promise<Npc[]> => (DEMO ? (await demo()).npcs : run(supabase.from('npcs').select(NPC_COLUMNS).order('name').limit(5000))),

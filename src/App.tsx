@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import { Spinner } from './components/ui'
 import { useAuth } from './lib/auth'
 import Bots from './pages/Bots'
+import Commands from './pages/Commands'
 import Characters from './pages/Characters'
 import Levels from './pages/Levels'
 import Login from './pages/Login'
@@ -42,6 +43,7 @@ export default function App() {
         <Route index element={<Overview />} />
         <Route path="personnages" element={<Characters />} />
         <Route path="pnj" element={<Npcs />} />
+        <Route path="commandes" element={<Commands />} />
         <Route path="moderation" element={<Moderation />} />
         <Route path="niveaux" element={<Levels />} />
         <Route path="fils" element={<Threads />} />
